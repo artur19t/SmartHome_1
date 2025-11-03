@@ -22,6 +22,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "hw_gpio.h"
+#include "hw_dma.h"
+#include "hw_usart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,7 +44,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t tx_hello[] = "Hello\r\n";
+uint8_t tx_bye[] = "Bye\r\n";
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -83,16 +86,17 @@ int main(void)
 
   /* USER CODE END Init */
 
-  /* Configure the system clock */
-  SystemClock_Config();
-
   /* USER CODE BEGIN SysInit */
 
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   /* USER CODE BEGIN 2 */
-
+	GPIO_USART2_Init();
+	USART2_Init();
+	DMA_USART2_TX_Init();
+	DMA_USART2_RX_Init();
+	rx_buf[0] = 99;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -102,6 +106,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+		
   }
   /* USER CODE END 3 */
 }
@@ -141,6 +146,44 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+
+void USART2_IRQHandler(void)
+{
+	if (LL_USART_IsActiveFlag_IDLE(USART2))
+	{
+		LL_USART_ClearFlag_IDLE(USART2);
+		
+		uint8_t received = RX_BUF_SIZE - LL_DMA_GetDataLength(DMA1, LL_DMA_STREAM_5);
+		LL_DMA_DisableStream(DMA1, LL_DMA_STREAM_5);
+		uint8_t currentData = rx_buf[received-1];
+		
+		if (currentData == (uint8_t)'0')
+		{
+			LL_DMA_DisableStream(DMA1, LL_DMA_STREAM_6);
+			LL_DMA_SetMemoryAddress(DMA1, LL_DMA_STREAM_6, (uint32_t)tx_bye);
+			LL_DMA_SetDataLength(DMA1, LL_DMA_STREAM_6, sizeof(tx_bye)-1);
+			LL_DMA_EnableStream(DMA1, LL_DMA_STREAM_6);
+			while (!LL_DMA_IsActiveFlag_TC6(DMA1)); 
+			LL_DMA_ClearFlag_TC6(DMA1);
+			while (!LL_USART_IsActiveFlag_TC(USART2));
+			LL_DMA_DisableStream(DMA1, LL_DMA_STREAM_6);
+		}
+		else
+		{
+			LL_DMA_DisableStream(DMA1, LL_DMA_STREAM_6);
+			LL_DMA_SetMemoryAddress(DMA1, LL_DMA_STREAM_6, (uint32_t)tx_hello);
+			LL_DMA_SetDataLength(DMA1, LL_DMA_STREAM_6, sizeof(tx_hello)-1);
+			LL_DMA_EnableStream(DMA1, LL_DMA_STREAM_6);
+			while (!LL_DMA_IsActiveFlag_TC6(DMA1)); 
+			LL_DMA_ClearFlag_TC6(DMA1);
+			while (!LL_USART_IsActiveFlag_TC(USART2));
+			LL_DMA_DisableStream(DMA1, LL_DMA_STREAM_6);
+		}
+		LL_DMA_SetDataLength(DMA1, LL_DMA_STREAM_5, RX_BUF_SIZE);
+    LL_DMA_EnableStream(DMA1, LL_DMA_STREAM_5);
+	}
+}
 
 /* USER CODE END 4 */
 

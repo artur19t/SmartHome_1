@@ -1,0 +1,57 @@
+#include "hw_dma.h"
+
+
+uint8_t rx_buf[RX_BUF_SIZE];
+
+
+void DMA_USART2_RX_Init(void)
+{
+	LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
+	
+	LL_DMA_DisableStream(DMA1, LL_DMA_STREAM_5);
+	LL_DMA_InitTypeDef DMA_USART2_RX_InitStuct = {0};
+	DMA_USART2_RX_InitStuct.Channel = LL_DMA_CHANNEL_4;
+	DMA_USART2_RX_InitStuct.Direction = LL_DMA_DIRECTION_PERIPH_TO_MEMORY;
+	DMA_USART2_RX_InitStuct.MemoryOrM2MDstAddress = (uint32_t)rx_buf;
+	DMA_USART2_RX_InitStuct.MemoryOrM2MDstDataSize = LL_DMA_MDATAALIGN_BYTE;
+	DMA_USART2_RX_InitStuct.MemoryOrM2MDstIncMode = LL_DMA_PERIPH_INCREMENT;
+	DMA_USART2_RX_InitStuct.Mode = LL_DMA_MODE_CIRCULAR;
+	DMA_USART2_RX_InitStuct.NbData = RX_BUF_SIZE;
+	DMA_USART2_RX_InitStuct.PeriphOrM2MSrcAddress = (uint32_t)&USART2->DR;
+	DMA_USART2_RX_InitStuct.PeriphOrM2MSrcDataSize = LL_DMA_PDATAALIGN_BYTE;
+	DMA_USART2_RX_InitStuct.PeriphOrM2MSrcIncMode = LL_DMA_PERIPH_NOINCREMENT;
+	DMA_USART2_RX_InitStuct.Priority = LL_DMA_PRIORITY_HIGH;
+	LL_DMA_Init(DMA1, LL_DMA_STREAM_5, &DMA_USART2_RX_InitStuct);
+	
+//	LL_DMA_EnableIT_TC(DMA1, LL_DMA_STREAM_5);
+//  NVIC_SetPriority(DMA1_Stream5_IRQn, 0);
+//  NVIC_EnableIRQ(DMA1_Stream5_IRQn);
+	
+	LL_USART_EnableDMAReq_RX(USART2);
+	LL_DMA_EnableStream(DMA1, LL_DMA_STREAM_5);
+}
+
+void DMA_USART2_TX_Init(void)
+{
+	LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_DMA1);
+	LL_DMA_DeInit(DMA1, LL_DMA_STREAM_6);
+	LL_DMA_DisableStream(DMA1, LL_DMA_STREAM_6);
+	LL_DMA_InitTypeDef DMA_USART2_TX_InitStuct = {0};
+	DMA_USART2_TX_InitStuct.Channel = LL_DMA_CHANNEL_4;
+	DMA_USART2_TX_InitStuct.Direction = LL_DMA_DIRECTION_MEMORY_TO_PERIPH;
+	DMA_USART2_TX_InitStuct.MemoryOrM2MDstDataSize = LL_DMA_MDATAALIGN_BYTE;
+	DMA_USART2_TX_InitStuct.MemoryOrM2MDstIncMode = LL_DMA_MEMORY_INCREMENT;
+	DMA_USART2_TX_InitStuct.Mode = LL_DMA_MODE_NORMAL;
+	DMA_USART2_TX_InitStuct.PeriphOrM2MSrcAddress = (uint32_t)&USART2->DR;
+	DMA_USART2_TX_InitStuct.PeriphOrM2MSrcDataSize = LL_DMA_PDATAALIGN_BYTE;
+	DMA_USART2_TX_InitStuct.PeriphOrM2MSrcIncMode = LL_DMA_PERIPH_NOINCREMENT;
+	DMA_USART2_TX_InitStuct.Priority = LL_DMA_PRIORITY_LOW;
+	LL_DMA_Init(DMA1, LL_DMA_STREAM_6, &DMA_USART2_TX_InitStuct);
+	
+	LL_USART_EnableDMAReq_TX(USART2);
+	//LL_DMA_EnableStream(DMA1, LL_DMA_STREAM_6);
+	
+//	LL_DMA_EnableIT_TC(DMA1, LL_DMA_STREAM_6);
+//  NVIC_SetPriority(DMA1_Stream6_IRQn, 1);
+//  NVIC_EnableIRQ(DMA1_Stream6_IRQn);
+}

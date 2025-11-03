@@ -1,0 +1,18 @@
+--cpu=Cortex-M4.fp.sp
+"smarthome\startup_stm32f401xc.o"
+"smarthome\main.o"
+"smarthome\stm32f4xx_it.o"
+"smarthome\stm32f4xx_ll_gpio.o"
+"smarthome\stm32f4xx_ll_usart.o"
+"smarthome\stm32f4xx_ll_dma.o"
+"smarthome\stm32f4xx_ll_rcc.o"
+"smarthome\stm32f4xx_ll_utils.o"
+"smarthome\stm32f4xx_ll_exti.o"
+"smarthome\system_stm32f4xx.o"
+"smarthome\hw_gpio.o"
+"smarthome\hw_usart.o"
+"smarthome\hw_dma.o"
+--strict --scatter "SmartHome\SmartHome.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "SmartHome.map" -o SmartHome\SmartHome.axf
