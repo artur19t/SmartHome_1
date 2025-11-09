@@ -24,6 +24,10 @@
 #include "hw_gpio.h"
 #include "hw_dma.h"
 #include "hw_usart.h"
+#include "font5x7.h"
+#include "st7735.h"
+#include "hw_spi.h"
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,6 +50,7 @@
 /* USER CODE BEGIN PV */
 uint8_t tx_hello[] = "Hello\r\n";
 uint8_t tx_bye[] = "Bye\r\n";
+extern const uint8_t Font5x7[];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -92,21 +97,44 @@ int main(void)
 
   /* Initialize all configured peripherals */
   /* USER CODE BEGIN 2 */
-	GPIO_USART2_Init();
-	USART2_Init();
-	DMA_USART2_TX_Init();
-	DMA_USART2_RX_Init();
+	//GPIO_USART2_Init();
+	//USART2_Init();
+	//DMA_USART2_TX_Init();
+	//DMA_USART2_RX_Init();
+	SystemClock_Config();
+
+  GPIO_SPI1_Init();
+  SPI_init();
+
+  ST7735_Init();
+  ST7735_FillScreen(COLOR_BLACK);
+
+  //ST7735_DrawString(10, 20, "HELLO", COLOR_YELLOW);
 	rx_buf[0] = 99;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	int i = 0;
+	ST7735_FillScreen(COLOR_BLACK);
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		
+		float temp = i;
+    i++;
+		if (i > 100)
+		{
+			i = 0;
+			ST7735_FillScreen(COLOR_BLACK);
+		}
+    char buf[32] = {0};
+    sprintf(buf, "Test: %.2f   ", temp);
+		//ST7735_FillScreen(0);
+    ST7735_DrawString(3, 30, buf, COLOR_RED);
+
+    LL_mDelay(1000);
   }
   /* USER CODE END 3 */
 }

@@ -3,4 +3,5 @@
 
 #include "main.h"
 void GPIO_USART2_Init(void);
+void GPIO_SPI1_Init(void);
 #endif
