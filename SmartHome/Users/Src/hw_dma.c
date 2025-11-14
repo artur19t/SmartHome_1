@@ -23,10 +23,6 @@ void DMA_USART2_RX_Init(void)
 	DMA_USART2_RX_InitStuct.Priority = LL_DMA_PRIORITY_HIGH;
 	LL_DMA_Init(DMA1, LL_DMA_STREAM_5, &DMA_USART2_RX_InitStuct);
 	
-//	LL_DMA_EnableIT_TC(DMA1, LL_DMA_STREAM_5);
-//  NVIC_SetPriority(DMA1_Stream5_IRQn, 0);
-//  NVIC_EnableIRQ(DMA1_Stream5_IRQn);
-	
 	LL_USART_EnableDMAReq_RX(USART2);
 	LL_DMA_EnableStream(DMA1, LL_DMA_STREAM_5);
 }
@@ -49,9 +45,4 @@ void DMA_USART2_TX_Init(void)
 	LL_DMA_Init(DMA1, LL_DMA_STREAM_6, &DMA_USART2_TX_InitStuct);
 	
 	LL_USART_EnableDMAReq_TX(USART2);
-	//LL_DMA_EnableStream(DMA1, LL_DMA_STREAM_6);
-	
-//	LL_DMA_EnableIT_TC(DMA1, LL_DMA_STREAM_6);
-//  NVIC_SetPriority(DMA1_Stream6_IRQn, 1);
-//  NVIC_EnableIRQ(DMA1_Stream6_IRQn);
 }

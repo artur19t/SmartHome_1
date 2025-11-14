@@ -1,4 +1,5 @@
-smarthome/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
+smarthome/i2creadwrite.o: ..\Users\Src\i2creadwrite.c \
+  ..\Users\Inc\i2creadwrite.h ..\Core\Inc\main.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_i2c.h \
   ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h \
   ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f401xc.h \
@@ -15,6 +16,4 @@ smarthome/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_spi.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_usart.h \
   ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_ll_gpio.h \
-  ..\Users\Inc\hw_gpio.h ..\Users\Inc\hw_dma.h ..\Users\Inc\hw_usart.h \
-  ..\Users\Inc\font5x7.h ..\Users\Inc\st7735.h ..\Users\Inc\hw_spi.h \
-  ..\Users\Inc\hw_i2c.h ..\Users\Inc\i2creadwrite.h
+  ..\Users\Inc\st7735.h
