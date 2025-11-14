@@ -728,6 +728,26 @@
               <FileType>5</FileType>
               <FilePath>..\Users\Inc\st7735.h</FilePath>
             </File>
+            <File>
+              <FileName>hw_i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Users\Src\hw_i2c.c</FilePath>
+            </File>
+            <File>
+              <FileName>hw_i2c.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Users\Inc\hw_i2c.h</FilePath>
+            </File>
+            <File>
+              <FileName>i2creadwrite.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Users\Src\i2creadwrite.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2creadwrite.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Users\Inc\i2creadwrite.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -27,6 +27,8 @@
 #include "font5x7.h"
 #include "st7735.h"
 #include "hw_spi.h"
+#include "hw_i2c.h"
+#include "i2creadwrite.h"
 #include <stdio.h>
 /* USER CODE END Includes */
 
@@ -37,7 +39,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define SHT21_ADDR 0x40
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -55,6 +57,7 @@ extern const uint8_t Font5x7[];
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+void I2C_Scan_LL(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -102,39 +105,35 @@ int main(void)
 	//DMA_USART2_TX_Init();
 	//DMA_USART2_RX_Init();
 	SystemClock_Config();
-
-  GPIO_SPI1_Init();
+  GPIO_SPI1_Init(); 
   SPI_init();
+  GPIO_I2C1_Init();
+  I2C_Init();
+  LL_I2C_Enable(I2C1);
 
   ST7735_Init();
   ST7735_FillScreen(COLOR_BLACK);
-
-  //ST7735_DrawString(10, 20, "HELLO", COLOR_YELLOW);
-	rx_buf[0] = 99;
+  ST7735_DrawString(65,60, "Hello!", COLOR_WHITE);
+  LL_mDelay(2000);
+  ST7735_FillScreen(COLOR_BLACK);
+  
+  BH1750_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	int i = 0;
-	ST7735_FillScreen(COLOR_BLACK);
+  
   while (1)
   {
+    float lux = BH1750_ReadLux();
+    char buf[32]; 
+    sprintf(buf, "Lux: %.2f   ", lux); 
+    ST7735_DrawString(20,45, buf, COLOR_WHITE);
+    LL_mDelay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		float temp = i;
-    i++;
-		if (i > 100)
-		{
-			i = 0;
-			ST7735_FillScreen(COLOR_BLACK);
-		}
-    char buf[32] = {0};
-    sprintf(buf, "Test: %.2f   ", temp);
-		//ST7735_FillScreen(0);
-    ST7735_DrawString(3, 30, buf, COLOR_RED);
-
-    LL_mDelay(1000);
+    
   }
   /* USER CODE END 3 */
 }
