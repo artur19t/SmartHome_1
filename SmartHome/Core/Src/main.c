@@ -39,7 +39,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define SHT21_ADDR 0x40
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -127,8 +126,14 @@ int main(void)
   {
     float lux = BH1750_ReadLux();
     char buf[32]; 
-    sprintf(buf, "Lux: %.2f   ", lux); 
+    sprintf(buf, "Lux:  %.2f   ", lux); 
     ST7735_DrawString(20,45, buf, COLOR_WHITE);
+    float T = SHT21_ReadTemperature();
+    sprintf(buf, "Temp: %.2f   ", T); 
+    ST7735_DrawString(20,55, buf, COLOR_WHITE);
+    float H = SHT21_ReadHumidity();
+    sprintf(buf, "Hum:  %.2f   ", H); 
+    ST7735_DrawString(20,65, buf, COLOR_WHITE);
     LL_mDelay(1000);
     /* USER CODE END WHILE */
 
